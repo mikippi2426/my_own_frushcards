@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_own_frushcards/parts/button_with_icon.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,8 +17,19 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(child: Image.asset("assets/images/image_title.png")),
             _titleText(),
-            //TODO 横線,
+            Divider(
+              height: 30.0,
+              color:Colors.white,
+              indent : 8.0,
+              endIndent: 8.0,
+              thickness: 1.0,
+            ),
             //TODO かくにんテストをするボタン,
+            ButtonWithIcon(
+              onPressed: ()=>print("おしたで～"),
+              icon: Icon(Icons.play_arrow),
+              label:"かくにんテストをする",
+            )
             //TODO ラジオボタン,
             //TODO 単語一覧を見るボタン,
             Text(
