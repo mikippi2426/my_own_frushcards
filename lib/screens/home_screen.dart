@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_own_frushcards/parts/button_with_icon.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
