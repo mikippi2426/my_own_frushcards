@@ -19,19 +19,26 @@ class _HomeScreenState extends State<HomeScreen> {
             _titleText(),
             Divider(
               height: 30.0,
-              color:Colors.white,
-              indent : 8.0,
+              color: Colors.white,
+              indent: 8.0,
               endIndent: 8.0,
               thickness: 1.0,
             ),
             //TODO かくにんテストをするボタン,
             ButtonWithIcon(
-              onPressed: ()=>print("おしたで～"),
+              onPressed: () => print("かくにんテスト"), //TODO,
               icon: Icon(Icons.play_arrow),
-              label:"かくにんテストをする",
+              label: "かくにんテストをする",
+              color: Colors.brown,
             ),
             //TODO ラジオボタン,
-            //TODO 単語一覧を見るボタン,
+            //単語一覧を見るボタン,
+            ButtonWithIcon(
+              onPressed: () => print("単語一覧"), //TODO
+              icon: Icon(Icons.list),
+              label: "単語一覧を観る",
+              color: Colors.grey,
+            ),
             Text(
               "powered by Suzura LLC 2019",
               style: TextStyle(fontFamily: "Reggae"),
@@ -47,11 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Text(
           "私だけの単語帳",
-          style: TextStyle(fontSize: 40.0,fontFamily: "Reggae"),
+          style: TextStyle(fontSize: 40.0, fontFamily: "Reggae"),
         ),
         Text(
           "My Own Frashcard",
-          style: TextStyle(fontSize: 24.0,fontFamily: "Reggae"),
+          style: TextStyle(fontSize: 24.0, fontFamily: "Reggae"),
         ),
       ],
     );
