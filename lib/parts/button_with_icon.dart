@@ -10,9 +10,15 @@ class ButtonWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-        onPressed: null,
-        icon: icon,
-        label: Text(label));
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 36.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+            onPressed: null,
+            icon: icon,
+            label: Text(label)),
+      ),
+    );
   }
 }

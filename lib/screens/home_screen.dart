@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: ()=>print("おしたで～"),
               icon: Icon(Icons.play_arrow),
               label:"かくにんテストをする",
-            )
+            ),
             //TODO ラジオボタン,
             //TODO 単語一覧を見るボタン,
             Text(
