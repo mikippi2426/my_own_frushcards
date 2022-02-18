@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:my_own_frushcards/parts/button_with_icon.dart';
 
 class HomeScreen extends StatefulWidget {
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isIncludedMemorizedWords = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +24,16 @@ class _HomeScreenState extends State<HomeScreen> {
               endIndent: 8.0,
               thickness: 1.0,
             ),
-            //TODO かくにんテストをするボタン,
+            //かくにんテストをするボタン,
             ButtonWithIcon(
               onPressed: () => print("かくにんテスト"), //TODO,
               icon: Icon(Icons.play_arrow),
               label: "かくにんテストをする",
               color: Colors.brown,
             ),
-            //TODO ラジオボタン,
+            SizedBox(height: 10.0,),
+            //ラジオボタン,
+            _radioButtons(),
             //単語一覧を見るボタン,
             ButtonWithIcon(
               onPressed: () => print("単語一覧"), //TODO
@@ -38,10 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
               label: "単語一覧を観る",
               color: Colors.grey,
             ),
+            SizedBox(height:60.0,),
             Text(
               "powered by Suzura LLC 2019",
               style: TextStyle(fontFamily: "Reggae"),
-            )
+            ),
+            SizedBox(height: 16.0,),
           ],
         ),
       ),
@@ -61,5 +66,40 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
     );
+  }
+
+  Widget _radioButtons() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 50.0,right:50.0),
+      child: Column(
+        children: [
+          RadioListTile(
+            value: false,
+            groupValue: isIncludedMemorizedWords,
+            onChanged: (bool? value) => _onRadioSelected(value!),
+            title: Text(
+              "暗記済みの単語を除外する",
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ),
+          RadioListTile(
+            value: true,
+            groupValue: isIncludedMemorizedWords,
+            onChanged: (bool? value) => _onRadioSelected(value!),
+            title: Text(
+              "暗記済みの単語を含む",
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _onRadioSelected(bool value) {
+    setState(() {
+      isIncludedMemorizedWords = value;
+      print("$valueが選ばれたで～");
+    });
   }
 }
