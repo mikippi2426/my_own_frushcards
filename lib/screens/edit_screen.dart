@@ -10,6 +10,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
 
   var questionController = TextEditingController();
+  var answerController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +19,24 @@ class _EditScreenState extends State<EditScreen> {
         title: Text("新しい単語の登録"),
         centerTitle: true,
       ),
-      body: Column(
-        children:<Widget>[
-          SizedBox(height: 30.0,),
-          Center(
-            child: Text(
-              "問題とこたえを入力して「登録」ボタンを押してください。",
-              style:TextStyle(fontSize: 12.0),
+      body:SingleChildScrollView(
+        child: Column(
+          children:<Widget>[
+            SizedBox(height: 30.0,),
+            Center(
+              child: Text(
+                "問題とこたえを入力して「登録」ボタンを押してください。",
+                style:TextStyle(fontSize: 12.0),
+              ),
             ),
-          ),
-          SizedBox(height: 30.0,),
-          //問題入力部分
-          _questionIconPart(),
-          //こたえ入力部分
-          _answerInputPart(),
-        ],
+            SizedBox(height: 30.0,),
+            //問題入力部分
+            _questionIconPart(),
+            SizedBox(height: 50.0,),
+            //こたえ入力部分
+            _answerInputPart(),
+          ],
+        ),
       ),
     );
   }
@@ -63,7 +67,7 @@ class _EditScreenState extends State<EditScreen> {
           Text("こたえ",style:  TextStyle(fontSize: 24.0),),
           SizedBox(height: 10.0,),
           TextField(
-            controller: questionController,
+            controller: answerController,
             keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 30.0),
