@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_own_frushcards/parts/button_with_icon.dart';
+import 'package:my_own_frushcards/screens/test_screen.dart';
+import 'package:my_own_frushcards/screens/world_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -26,27 +28,33 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             //かくにんテストをするボタン,
             ButtonWithIcon(
-              onPressed: () => print("かくにんテスト"), //TODO,
+              onPressed: () => _startTestScreen(context), //
               icon: Icon(Icons.play_arrow),
               label: "かくにんテストをする",
               color: Colors.brown,
             ),
-            SizedBox(height: 10.0,),
+            SizedBox(
+              height: 10.0,
+            ),
             //ラジオボタン,
             _radioButtons(),
             //単語一覧を見るボタン,
             ButtonWithIcon(
-              onPressed: () => print("単語一覧"), //TODO
+              onPressed: () => _startWordListScreen(context), //
               icon: Icon(Icons.list),
               label: "単語一覧を観る",
               color: Colors.grey,
             ),
-            SizedBox(height:60.0,),
+            SizedBox(
+              height: 60.0,
+            ),
             Text(
               "powered by Suzura LLC 2019",
               style: TextStyle(fontFamily: "Reggae"),
             ),
-            SizedBox(height: 16.0,),
+            SizedBox(
+              height: 16.0,
+            ),
           ],
         ),
       ),
@@ -70,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _radioButtons() {
     return Padding(
-      padding: const EdgeInsets.only(left: 50.0,right:50.0),
+      padding: const EdgeInsets.only(left: 50.0, right: 50.0),
       child: Column(
         children: [
           RadioListTile(
@@ -101,5 +109,18 @@ class _HomeScreenState extends State<HomeScreen> {
       isIncludedMemorizedWords = value;
       print("$valueが選ばれたで～");
     });
+  }
+
+  _startWordListScreen(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => WordListScreen()));
+  }
+
+  _startTestScreen(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TestScreen(
+                isIncludedMemorizedWords: isIncludedMemorizedWords)));
   }
 }
