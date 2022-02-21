@@ -28,9 +28,10 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ),
           SizedBox(height: 30.0,),
-          //問題入力ボタン
+          //問題入力部分
           _questionIconPart(),
-          //TODO こたえ入力画面
+          //こたえ入力部分
+          _answerInputPart(),
         ],
       ),
     );
@@ -53,4 +54,22 @@ class _EditScreenState extends State<EditScreen> {
       ),
     );
  }
+
+  Widget  _answerInputPart() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Column(
+        children: [
+          Text("こたえ",style:  TextStyle(fontSize: 24.0),),
+          SizedBox(height: 10.0,),
+          TextField(
+            controller: questionController,
+            keyboardType: TextInputType.text,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 30.0),
+          )
+        ],
+      ),
+    );
+  }
 }
