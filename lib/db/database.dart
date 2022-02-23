@@ -4,10 +4,11 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-part'database.g.dart';
+part 'database.g.dart';
 
 class Words extends Table{
  TextColumn get strQuestion => text()();
+
  TextColumn get strAnswer => text()();
 
  @override
@@ -18,6 +19,10 @@ class Words extends Table{
 @DriftDatabase(tables: [Words])
 class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
+
+  @override
+  // TODO: implement schemaVersion
+  int get schemaVersion => 1;
 
 
 }
