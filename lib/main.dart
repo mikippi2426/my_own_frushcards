@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:my_own_frushcards/db/database.dart';
+import 'package:my_own_frushcards/screens/home_screen.dart';
 
-import 'screens/home_screen.dart';
+late MyDatabase database;
 
-void main()=> runApp(MyApp());
+void main(){
+  database = MyDatabase();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
