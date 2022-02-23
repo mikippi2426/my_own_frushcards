@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:my_own_frushcards/main.dart';
+import '../db/database.dart';
 import 'edit_screen.dart';
 
 class WordListScreen extends StatefulWidget {
@@ -10,6 +11,15 @@ class WordListScreen extends StatefulWidget {
 }
 
 class _WordListScreenState extends State<WordListScreen> {
+
+  List<Word> _wordList= [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getAllWords();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,5 +40,9 @@ class _WordListScreenState extends State<WordListScreen> {
         context, MaterialPageRoute(
         builder: (context) => EditScreen()
         ));
+  }
+
+  void _getAllWords() async{
+    _wordList = await database.allWords;
   }
 }
