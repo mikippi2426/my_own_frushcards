@@ -27,14 +27,18 @@ class _EditScreenState extends State<EditScreen> {
 
   String _titleText ="";
 
+  late bool _isQuestionEnabled;
+
   @override
   void initState() {
     super.initState();
     if(widget.status == EditStatus.ADD){
+      _isQuestionEnabled = true;
       _titleText = "新しい単語の追加";
       questionController.text = "";
       answerController.text = "";
     }else{
+      _isQuestionEnabled = false;
       _titleText = "登録した単語の修正";
       questionController.text = widget.word!.strQuestion;
       answerController.text = widget.word!.strAnswer;
@@ -51,7 +55,7 @@ class _EditScreenState extends State<EditScreen> {
           centerTitle: true,
           actions: [
             IconButton(
-              onPressed: () => _insertWord(),
+              onPressed: () => _onWordRegistered(),
               icon: Icon(Icons.done),
               tooltip: "登録",
             )
@@ -99,6 +103,7 @@ class _EditScreenState extends State<EditScreen> {
             height: 10.0,
           ),
           TextField(
+            enabled: _isQuestionEnabled,
             controller: questionController,
             keyboardType: TextInputType.text,
             textAlign: TextAlign.center,
@@ -138,6 +143,14 @@ class _EditScreenState extends State<EditScreen> {
     return Future.value(false);
   }
 
+  _onWordRegistered() {
+    if(widget.status == EditStatus.ADD){
+      _insertWord();
+    }else {
+      _updateWord();
+    }
+  }
+
   _insertWord() async {
     if (questionController.text == "" || answerController.text == "") {
       Fluttertoast.showToast(
@@ -159,7 +172,6 @@ class _EditScreenState extends State<EditScreen> {
       Fluttertoast.showToast(
         msg: "登録が完了しました",
         toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
       );
     } on SqliteException catch(e){
       Fluttertoast.showToast(msg: "この問題は既に登録されているので、登録できません。",
@@ -168,5 +180,33 @@ class _EditScreenState extends State<EditScreen> {
     }
 
   }
+
+  void _updateWord() async{
+    if (questionController.text == "" || answerController.text == "") {
+      Fluttertoast.showToast(
+        msg: "問題と答えの両方を入力しないと登録できません。",
+        toastLength: Toast.LENGTH_LONG,
+      );
+      return;
+  }
+    var word = Word(
+      strQuestion: questionController.text,
+      strAnswer: answerController.text,
+    );
+
+    try{
+      await database.updateWord(word);
+      _backToWordListScreen();
+      Fluttertoast.showToast(
+        msg: "登録が完了しました。",
+        toastLength: Toast.LENGTH_LONG,
+      );
+    } on SqliteException catch (e){
+      Fluttertoast.showToast(msg: "何らかの問題が発生して登録できませんでした。",
+        toastLength: Toast.LENGTH_LONG,
+      );
+    }
+    }
+
 }
 
