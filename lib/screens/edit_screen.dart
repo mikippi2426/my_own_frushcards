@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,16 +8,38 @@ import 'package:my_own_frushcards/screens/world_list_screen.dart';
 
 import '../main.dart';
 
+enum EditStatus { ADD, EDIT }
+
 class EditScreen extends StatefulWidget {
-  const EditScreen({Key? key}) : super(key: key);
+
+  final EditStatus status;
+  final Word? word;
+
+  EditScreen ({required this.status, this.word});
 
   @override
   _EditScreenState createState() => _EditScreenState();
 }
 
 class _EditScreenState extends State<EditScreen> {
-  var questionController = TextEditingController();
-  var answerController = TextEditingController();
+  TextEditingController questionController = TextEditingController();
+  TextEditingController answerController = TextEditingController();
+
+  String _titleText ="";
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.status == EditStatus.ADD){
+      _titleText = "新しい単語の追加";
+      questionController.text = "";
+      answerController.text = "";
+    }else{
+      _titleText = "登録した単語の修正";
+      questionController.text = widget.word!.strQuestion;
+      answerController.text = widget.word!.strAnswer;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +47,7 @@ class _EditScreenState extends State<EditScreen> {
       onWillPop: () => _backToWordListScreen(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("新しい単語の登録"),
+          title: Text(_titleText),
           centerTitle: true,
           actions: [
             IconButton(
@@ -124,7 +148,7 @@ class _EditScreenState extends State<EditScreen> {
     }
     var word = Word(
         strQuestion: questionController.text,
-        strAnswer: questionController.text,
+        strAnswer: answerController.text,
     );
     try{
       await database.addWord(word);
@@ -145,3 +169,4 @@ class _EditScreenState extends State<EditScreen> {
 
   }
 }
+
