@@ -12,6 +12,8 @@ class Words extends Table {
 
   TextColumn get strAnswer => text()();
 
+  BoolColumn get isMemorized => boolean().withDefault(Constant(false))();
+
   @override
   // TODO: implement primaryKey
   Set<Column> get primaryKey => {strQuestion};

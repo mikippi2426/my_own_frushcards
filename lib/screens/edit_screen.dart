@@ -4,7 +4,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_own_frushcards/db/database.dart';
-import 'package:my_own_frushcards/screens/world_list_screen.dart';
+import 'package:my_own_frushcards/screens/word_list_screen.dart';
 
 import '../main.dart';
 
