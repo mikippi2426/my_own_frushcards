@@ -162,6 +162,7 @@ class _EditScreenState extends State<EditScreen> {
     var word = Word(
         strQuestion: questionController.text,
         strAnswer: answerController.text,
+        isMemorized: false,
     );
     try{
       await database.addWord(word);
@@ -192,6 +193,7 @@ class _EditScreenState extends State<EditScreen> {
     var word = Word(
       strQuestion: questionController.text,
       strAnswer: answerController.text,
+      isMemorized: false,
     );
 
     try{
