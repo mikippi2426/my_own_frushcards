@@ -27,16 +27,17 @@ class MyDatabase extends _$MyDatabase {
   int get schemaVersion => 2;
 
   //統合処理
-  MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (Migrator m){
-      return m.createAll();
-    },
-    onUpgrade: (Migrator m, int from, int to) async{
-      if(from == 1){
-  await m.addColumn(words, words.isMemorized);
-  }
-}
-  );
+  MigrationStrategy get migration =>
+      MigrationStrategy(
+          onCreate: (Migrator m) {
+            return m.createAll();
+          },
+          onUpgrade: (Migrator m, int from, int to) async {
+            if (from == 1) {
+              await m.addColumn(words, words.isMemorized);
+            }
+          }
+      );
 
   //Create
   Future addWord(Word word) => into(words).insert(word);
@@ -44,13 +45,19 @@ class MyDatabase extends _$MyDatabase {
   //Read
   Future<List<Word>> get allWords => select(words).get();
 
+  //Read(暗記済み単語除外)
+  Future<List<Word>> get allWordsExcludedMemorized =>
+      (select(words)
+        ..where((table) =>table.isMemorized.equals(false))).get();
+
   //update
   Future updateWord(Word word) => update(words).replace(word);
 
   //delete
-  Future deleteWord(Word word) => (delete(words)
+  Future deleteWord(Word word) =>
+      (delete(words)
         ..where((table) => table.strQuestion.equals(word.strQuestion)))
-      .go();
+          .go();
 }
 
 LazyDatabase _openConnection() {
