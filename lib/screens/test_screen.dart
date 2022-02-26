@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_own_frushcards/db/database.dart';
+import 'package:my_own_frushcards/main.dart';
 
 enum TestStatus { BEFORE_START, SHOW_QUESTION, SHOW_ANSWER, FINISHED }
 
@@ -13,12 +15,34 @@ class TestScreen extends StatefulWidget {
 
 class _TestScreenState extends State<TestScreen> {
   int _numberOfQuestion = 0;
-
   String _textQuestion = "テスト"; //TODO
-
   String _textAnswer = "こたえ";
-
   bool _isMemorized = false; //TODO
+
+  List<Word> _testDataList = [];
+
+  late TestStatus _testStatus;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getTestData();
+  }
+  void _getTestData() async{
+    if(widget.isIncludedMemorizedWords){
+      _testDataList = await database.allWords;
+    }else{
+      _testDataList =await database.allWordsExcludedMemorized;
+    }
+
+    _testDataList.shuffle();
+    _testStatus = TestStatus.BEFORE_START;
+    print(_testDataList.toString());
+    setState(() {
+      _numberOfQuestion = _testDataList.length;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,4 +145,6 @@ class _TestScreenState extends State<TestScreen> {
       ),
     );
   }
+
+
 }
