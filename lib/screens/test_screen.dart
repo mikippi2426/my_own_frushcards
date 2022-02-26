@@ -182,6 +182,7 @@ class _TestScreenState extends State<TestScreen> {
         break;
       case TestStatus.SHOW_QUESTION:
         _testStatus = TestStatus.SHOW_ANSWER;
+        _showAnswer();
         break;
       case TestStatus.SHOW_ANSWER:
         if (_numberOfQuestion <= 0) {
@@ -201,10 +202,22 @@ class _TestScreenState extends State<TestScreen> {
       _isQuestionCardVisible=true;
       _isAnswerCardVisible =false;
       _isCheckBoxVisible = false;
+      _isFabVisible=true;
       _textQuestion = _currentWord.strQuestion;
     });
     _numberOfQuestion -=1;
     _index +=1;
 
+  }
+
+  void _showAnswer() {
+    setState(() {
+      _isQuestionCardVisible=true;
+      _isAnswerCardVisible=true;
+      _isCheckBoxVisible=true;
+      _isFabVisible=true;
+      _textAnswer= _currentWord.strAnswer;
+      _isMemorized = _currentWord.isMemorized;
+    });
   }
 }
