@@ -16,8 +16,13 @@ class TestScreen extends StatefulWidget {
 class _TestScreenState extends State<TestScreen> {
   int _numberOfQuestion = 0;
   String _textQuestion = "テスト"; //TODO
-  String _textAnswer = "こたえ";
-  bool _isMemorized = false; //TODO
+  String _textAnswer = "こたえ"; //TODO
+  bool _isMemorized = false;
+
+  bool _isQuestionCardVisible = false;
+  bool _isAnswerCardVisible = false;
+  bool _isCheckBoxVisible = false;
+  bool _isFabVisible = false;
 
   List<Word> _testDataList = [];
 
@@ -29,17 +34,23 @@ class _TestScreenState extends State<TestScreen> {
     super.initState();
     _getTestData();
   }
-  void _getTestData() async{
-    if(widget.isIncludedMemorizedWords){
+
+  void _getTestData() async {
+    if (widget.isIncludedMemorizedWords) {
       _testDataList = await database.allWords;
-    }else{
-      _testDataList =await database.allWordsExcludedMemorized;
+    } else {
+      _testDataList = await database.allWordsExcludedMemorized;
     }
 
     _testDataList.shuffle();
     _testStatus = TestStatus.BEFORE_START;
+
     print(_testDataList.toString());
+
     setState(() {
+      _isQuestionCardVisible = false;
+      _isCheckBoxVisible = false;
+      _isFabVisible = true;
       _numberOfQuestion = _testDataList.length;
     });
   }
@@ -51,11 +62,13 @@ class _TestScreenState extends State<TestScreen> {
         title: Text("かくにんテスト"),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _goNextStatus(),
-        child: Icon(Icons.skip_next),
-        tooltip: "次にすすむ",
-      ),
+      floatingActionButton: _isFabVisible
+          ? FloatingActionButton(
+              onPressed: () => _goNextStatus(),
+              child: Icon(Icons.skip_next),
+              tooltip: "次にすすむ",
+            )
+          : null,
       body: Column(
         children: [
           SizedBox(
@@ -101,53 +114,65 @@ class _TestScreenState extends State<TestScreen> {
 
   //問題カード表示部分
   Widget _questionCardPart() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset("assets/images/image_flash_question.png"),
-        Text(
-          _textQuestion,
-          style: TextStyle(color: Colors.grey[800], fontSize: 20.0),
-        )
-      ],
-    );
+    if (_isQuestionCardVisible) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset("assets/images/image_flash_question.png"),
+          Text(
+            _textQuestion,
+            style: TextStyle(color: Colors.grey[800], fontSize: 20.0),
+          )
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
   //TODO こたえカード
   Widget _answerCardPart() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset("assets/images/image_flash_answer.png"),
-        Text(
-          _textAnswer,
-          style: TextStyle(fontSize: 20.0),
-        ),
-      ],
-    );
+    if (_isAnswerCardVisible) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset("assets/images/image_flash_answer.png"),
+          Text(
+            _textAnswer,
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
-  //TODO 暗記済みチェック部分
+  //暗記済みチェック部分
   Widget _isMemorizedCheckPart() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-      child: CheckboxListTile(
-        title: Text(
-          "暗記済にする場合はチェックを入れて下さい",
-          style: TextStyle(fontSize: 12.0),
+    if (_isCheckBoxVisible) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+        child: CheckboxListTile(
+          title: Text(
+            "暗記済にする場合はチェックを入れて下さい",
+            style: TextStyle(fontSize: 12.0),
+          ),
+          value: _isMemorized,
+          onChanged: (value) {
+            setState(() {
+              _isMemorized = value!;
+            });
+          },
         ),
-        value: _isMemorized,
-        onChanged: (value) {
-          setState(() {
-            _isMemorized = value!;
-          });
-        },
-      ),
-    );
+      );
+    } else {
+      return Container();
+    }
   }
 
   _goNextStatus() {
-    switch(_testStatus){
+    switch (_testStatus) {
       case TestStatus.BEFORE_START:
         _testStatus = TestStatus.SHOW_QUESTION;
         break;
@@ -155,16 +180,14 @@ class _TestScreenState extends State<TestScreen> {
         _testStatus = TestStatus.SHOW_ANSWER;
         break;
       case TestStatus.SHOW_ANSWER:
-        if (_numberOfQuestion <= 0){
+        if (_numberOfQuestion <= 0) {
           _testStatus = TestStatus.FINISHED;
-        }else {
+        } else {
           _testStatus = TestStatus.SHOW_QUESTION;
         }
         break;
-      case  TestStatus.FINISHED:
+      case TestStatus.FINISHED:
         break;
     }
   }
-
-
 }
