@@ -48,7 +48,12 @@ class MyDatabase extends _$MyDatabase {
   //Read(暗記済み単語除外)
   Future<List<Word>> get allWordsExcludedMemorized =>
       (select(words)
-        ..where((table) =>table.isMemorized.equals(false))).get();
+        ..where((table) => table.isMemorized.equals(false))).get();
+
+  //Read(暗記済みが下になるようにソート)
+  Future<List<Word>> get allWordSorted =>
+      (select(words)
+        ..orderBy([(table)=>OrderingTerm(expression: table.isMemorized)])).get();
 
   //update
   Future updateWord(Word word) => update(words).replace(word);
