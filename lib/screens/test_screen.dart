@@ -25,8 +25,10 @@ class _TestScreenState extends State<TestScreen> {
   bool _isFabVisible = false;
 
   List<Word> _testDataList = [];
-
   late TestStatus _testStatus;
+
+  int _index =0;//今何問目
+  late Word _currentWord;
 
   @override
   void initState() {
@@ -44,6 +46,7 @@ class _TestScreenState extends State<TestScreen> {
 
     _testDataList.shuffle();
     _testStatus = TestStatus.BEFORE_START;
+    _index = 0;
 
     print(_testDataList.toString());
 
@@ -175,6 +178,7 @@ class _TestScreenState extends State<TestScreen> {
     switch (_testStatus) {
       case TestStatus.BEFORE_START:
         _testStatus = TestStatus.SHOW_QUESTION;
+        _showQustion();
         break;
       case TestStatus.SHOW_QUESTION:
         _testStatus = TestStatus.SHOW_ANSWER;
@@ -189,5 +193,18 @@ class _TestScreenState extends State<TestScreen> {
       case TestStatus.FINISHED:
         break;
     }
+  }
+
+  void _showQustion() {
+    _currentWord = _testDataList[_index];
+    setState(() {
+      _isQuestionCardVisible=true;
+      _isAnswerCardVisible =false;
+      _isCheckBoxVisible = false;
+      _textQuestion = _currentWord.strQuestion;
+    });
+    _numberOfQuestion -=1;
+    _index +=1;
+
   }
 }
