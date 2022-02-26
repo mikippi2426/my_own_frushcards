@@ -27,7 +27,7 @@ class _TestScreenState extends State<TestScreen> {
   List<Word> _testDataList = [];
   late TestStatus _testStatus;
 
-  int _index =0;//今何問目
+  int _index = 0; //今何問目
   late Word _currentWord;
 
   @override
@@ -65,31 +65,36 @@ class _TestScreenState extends State<TestScreen> {
         title: Text("かくにんテスト"),
         centerTitle: true,
       ),
-      floatingActionButton:(_isFabVisible && _testDataList.isNotEmpty)
+      floatingActionButton: (_isFabVisible && _testDataList.isNotEmpty)
           ? FloatingActionButton(
-              onPressed: () => _goNextStatus(),
-              child: Icon(Icons.skip_next),
-              tooltip: "次にすすむ",
-            )
+        onPressed: () => _goNextStatus(),
+        child: Icon(Icons.skip_next),
+        tooltip: "次にすすむ",
+      )
           : null,
-      body: Column(
+      body: Stack(
         children: [
-          SizedBox(
-            height: 10.0,
+          Column(
+            children: [
+              SizedBox(
+                height: 10.0,
+              ),
+              _numberOfQuestionsPart(),
+              SizedBox(
+                height: 20.0,
+              ),
+              _questionCardPart(),
+              SizedBox(
+                height: 10.0,
+              ),
+              _answerCardPart(),
+              SizedBox(
+                height: 10.0,
+              ),
+              _isMemorizedCheckPart(),
+            ],
           ),
-          _numberOfQuestionsPart(),
-          SizedBox(
-            height: 20.0,
-          ),
-          _questionCardPart(),
-          SizedBox(
-            height: 10.0,
-          ),
-          _answerCardPart(),
-          SizedBox(
-            height: 10.0,
-          ),
-          _isMemorizedCheckPart(),
+          _endMessage(),
         ],
       ),
     );
@@ -173,8 +178,20 @@ class _TestScreenState extends State<TestScreen> {
       return Container();
     }
   }
+  //テスト終了メッセージ
+  Widget _endMessage() {
+    if(_testStatus == TestStatus.FINISHED) {
+      return Center(
+        child: Text(
+          "テスト終了", style: TextStyle(fontSize: 45.0),
+        ),
+      );
+    }else{
+      return Container();
+    }
+  }
 
-  _goNextStatus() {
+  _goNextStatus() async{
     switch (_testStatus) {
       case TestStatus.BEFORE_START:
         _testStatus = TestStatus.SHOW_QUESTION;
@@ -185,10 +202,15 @@ class _TestScreenState extends State<TestScreen> {
         _showAnswer();
         break;
       case TestStatus.SHOW_ANSWER:
+        await _updateMemorizedFlag();
         if (_numberOfQuestion <= 0) {
-          _testStatus = TestStatus.FINISHED;
+          setState(() {
+            _isFabVisible = false;
+            _testStatus = TestStatus.FINISHED;
+          });
         } else {
           _testStatus = TestStatus.SHOW_QUESTION;
+          _showQustion();
         }
         break;
       case TestStatus.FINISHED:
@@ -199,25 +221,34 @@ class _TestScreenState extends State<TestScreen> {
   void _showQustion() {
     _currentWord = _testDataList[_index];
     setState(() {
-      _isQuestionCardVisible=true;
-      _isAnswerCardVisible =false;
+      _isQuestionCardVisible = true;
+      _isAnswerCardVisible = false;
       _isCheckBoxVisible = false;
-      _isFabVisible=true;
+      _isFabVisible = true;
       _textQuestion = _currentWord.strQuestion;
     });
-    _numberOfQuestion -=1;
-    _index +=1;
-
+    _numberOfQuestion -= 1;
+    _index += 1;
   }
 
   void _showAnswer() {
     setState(() {
-      _isQuestionCardVisible=true;
-      _isAnswerCardVisible=true;
-      _isCheckBoxVisible=true;
-      _isFabVisible=true;
-      _textAnswer= _currentWord.strAnswer;
+      _isQuestionCardVisible = true;
+      _isAnswerCardVisible = true;
+      _isCheckBoxVisible = true;
+      _isFabVisible = true;
+      _textAnswer = _currentWord.strAnswer;
       _isMemorized = _currentWord.isMemorized;
     });
   }
+
+  Future<void> _updateMemorizedFlag() async{
+    var updateWord = Word(strQuestion: _currentWord.strQuestion,
+        strAnswer: _currentWord.strAnswer,
+        isMemorized: _isMemorized);
+    await database.updateWord(updateWord);
+    print(updateWord.toString());
+  }
+
+
 }
