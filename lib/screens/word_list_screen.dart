@@ -27,7 +27,7 @@ class _WordListScreenState extends State<WordListScreen> {
         actions: [
           IconButton(
             onPressed: () => _sortWords(),
-            icon: (Icons.sort),
+            icon: Icon(Icons.sort),
             tooltip: "暗記済みの単語を下になるようにソート",
           )
         ],
