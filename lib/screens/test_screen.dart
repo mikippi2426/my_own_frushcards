@@ -103,7 +103,7 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  //TODO 残り問題数表示部分
+  //残り問題数表示部分
   Widget _numberOfQuestionsPart() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
