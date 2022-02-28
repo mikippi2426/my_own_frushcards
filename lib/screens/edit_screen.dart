@@ -158,27 +158,47 @@ class _EditScreenState extends State<EditScreen> {
       );
       return;
     }
-    var word = Word(
-      strQuestion: questionController.text,
-      strAnswer: answerController.text,
-      isMemorized: false,
-    );
-    try {
-      await database.addWord(word);
-      print("OK");
-      questionController.clear();
-      answerController.clear();
-      //登録完了メッセージ
-      Fluttertoast.showToast(
-        msg: "登録が完了しました",
-        toastLength: Toast.LENGTH_LONG,
-      );
-    } on SqliteException catch (e) {
-      Fluttertoast.showToast(
-        msg: "この問題は既に登録されているので、登録できません。",
-        toastLength: Toast.LENGTH_LONG,
-      );
-    }
+
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text("登録"),
+              content: Text("登録していいですか？"),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    var word = Word(
+                      strQuestion: questionController.text,
+                      strAnswer: answerController.text,
+                      isMemorized: false,
+                    );
+                    try {
+                      await database.addWord(word);
+                      print("OK");
+                      questionController.clear();
+                      answerController.clear();
+                      //登録完了メッセージ
+                      Fluttertoast.showToast(
+                        msg: "登録が完了しました",
+                        toastLength: Toast.LENGTH_LONG,
+                      );
+                    } on SqliteException catch (e) {
+                      Fluttertoast.showToast(
+                        msg: "この問題は既に登録されているので、登録できません。",
+                        toastLength: Toast.LENGTH_LONG,
+                      );
+                    } finally {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text("はい"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("いいえ"),
+                ),
+              ],
+            ));
   }
 
   void _updateWord() async {
@@ -189,24 +209,42 @@ class _EditScreenState extends State<EditScreen> {
       );
       return;
     }
-    var word = Word(
-      strQuestion: questionController.text,
-      strAnswer: answerController.text,
-      isMemorized: false,
-    );
 
-    try {
-      await database.updateWord(word);
-      _backToWordListScreen();
-      Fluttertoast.showToast(
-        msg: "登録が完了しました。",
-        toastLength: Toast.LENGTH_LONG,
-      );
-    } on SqliteException catch (e) {
-      Fluttertoast.showToast(
-        msg: "何らかの問題が発生して登録できませんでした。",
-        toastLength: Toast.LENGTH_LONG,
-      );
-    }
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text("${questionController.text}の変更"),
+              content: Text("変更してもいいですか？"),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    var word = Word(
+                      strQuestion: questionController.text,
+                      strAnswer: answerController.text,
+                      isMemorized: false,
+                    );
+
+                    try {
+                      await database.updateWord(word);
+                      _backToWordListScreen();
+                      Fluttertoast.showToast(
+                        msg: "登録が完了しました。",
+                        toastLength: Toast.LENGTH_LONG,
+                      );
+                    } on SqliteException catch (e) {
+                      Fluttertoast.showToast(
+                        msg: "何らかの問題が発生して登録できませんでした。",
+                        toastLength: Toast.LENGTH_LONG,
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text("はい"),
+                ),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("いいえ")),
+              ],
+            ));
   }
 }
